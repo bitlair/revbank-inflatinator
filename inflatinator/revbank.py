@@ -16,11 +16,10 @@ def find_product_details(vendor_and_sku):
 
 
 def update_product_pricings(src):
-    lines = src.split('\n')
-
     find_updatable = re.compile(r'#\s*(?P<sku>\S+)\s+(?P<units>\d+)x$')
     find_aliases = re.compile(r'^(?P<aliases>\S+)')
 
+    lines = src.split('\n')
     lines_out = []
 
     for line in lines:
@@ -45,6 +44,6 @@ def update_product_pricings(src):
         # Round up to 5ct.
         unit_price = (unit_price * 20).quantize(Decimal('1'), rounding=ROUND_UP) / 20
 
-        lines_out.append(f'{aliases}\t{unit_price:.2f}\t{d["name"]}  # {m["sku"]} {units}x')
+        lines_out.append(f'{aliases:<15} {unit_price:.2f}  {d["name"]:<32} # {m["sku"]} {units}x')
 
     return '\n'.join(lines_out)
