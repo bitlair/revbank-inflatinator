@@ -1,8 +1,11 @@
 import revbank
 import sys
+import logging
 
 
 def main(product_file):
+    logging.basicConfig(level=logging.DEBUG)
+
     with open(product_file, 'r') as fd:
         src = fd.read()
 
