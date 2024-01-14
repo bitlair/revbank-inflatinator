@@ -5,6 +5,8 @@ import logging
 
 def main(product_file):
     logging.basicConfig(level=logging.DEBUG)
+    logging.getLogger("requests").setLevel(logging.WARNING)
+    logging.getLogger("urllib3").setLevel(logging.WARNING)
 
     with open(product_file, 'r') as fd:
         src = fd.read()
