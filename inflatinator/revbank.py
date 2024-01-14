@@ -58,7 +58,7 @@ def update_product_pricings(src):
         product_aliases = set()
         if not line.startswith('#'):
             product_aliases = set(find_aliases.search(line)['aliases'].split(','))
-        product_aliases.add(prod_info.ean)
+        product_aliases.add(prod_info.gtin)
 
         aliases = ','.join(sorted(product_aliases))
 

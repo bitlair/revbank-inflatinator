@@ -6,10 +6,10 @@ import subprocess
 
 
 class Product:
-    def __init__(self, name, price, ean, units):
+    def __init__(self, name, price, gtin, units):
         self.name = name
         self.price = price
-        self.ean = ean
+        self.gtin = gtin
         self.units = units
 
     def __str__(self):
@@ -38,6 +38,6 @@ def ah_get_by_sku(ah_sku, units):
     return Product(
         name=schema['name'],
         price=Decimal(schema['offers']['price']),
-        ean=schema['gtin13'],
+        gtin=schema['gtin13'],
         units=units,
     )
