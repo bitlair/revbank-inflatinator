@@ -88,3 +88,10 @@ barcode om het product te vinden op de website.
 Verpakkingen van de Sligro hebben over het algemeen producten hier in zitten die een andere 
 barcode hebben dan de verpakking. Inflatinator schrijft beide barcodes naar dezelfde productregel.
 Zo kunnen producten ook afgerekend worden door de doos te scannen.
+
+
+## Q&A
+
+* Q: Wat nou als een product in de aanbieding is en het is eerder voor meer ingekocht? Maak ik dan
+verlies?
+  * A: Nee. Inflatinator gebruikt altijd de oorspronkelijke prijs, ookal is er een lopende aanbieding.
