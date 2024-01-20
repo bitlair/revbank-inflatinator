@@ -100,10 +100,13 @@ def update_product_pricings(src):
         # Apply profit margin and divide by the number of units per sold packaging.
         unit_price = prod_info.price * profit_margin / prod_info.units
         # Round up to 5ct.
+        previous_price = product.price
         product.price = (unit_price * 20).quantize(Decimal('1'), rounding=ROUND_UP) / 20
 
         lines_out.append(product.format_line())
 
         logging.debug(f'Found "{prod_info.name}", buy €{prod_info.price/prod_info.units:.2f}, sell €{product.price:.2f}')
+        if product.price != previous_price:
+            logging.info(f'Adjusted "{prod_info.name}", €{previous_price:.2f} -> €{product.price:.2f}')
 
     return '\n'.join(lines_out)
