@@ -9,6 +9,9 @@ import subprocess
 import logging
 
 
+vat = Decimal('1.09')
+
+
 class Product:
     def __init__(self, *, name, price, gtin, units, aliases=[]):
         self.name = name
@@ -128,7 +131,7 @@ def sligro_get_by_gtin(gtin13):
 
     return Product(
         name=f'{product["brandName"]} {product["name"]} ({volume})',
-        price=Decimal(price_obj['value']),
+        price=Decimal(price_obj['value']) * vat,
         gtin=gtin13,
         units=units,
         aliases=[sub_gtin] if sub_gtin else [],
