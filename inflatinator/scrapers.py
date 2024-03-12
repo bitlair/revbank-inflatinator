@@ -147,6 +147,8 @@ def parse_content_description(cd):
         return int(cd.split(' ')[0]), 'rol'
     if (m := re.search('^Pak (\d+) stuks$', cd)):
         return int(m[1]), ''
+    if (m := re.search('^(\d+) Flessen (\d+ CL)$', cd)):
+        return int(m[1]), m[2]
 
     groups = re.split('\s+x\s+', cd)
     volume = groups[-1]
@@ -163,3 +165,4 @@ assert parse_content_description('24  2-packs x 70 gram') == (24, '70 gram')
 assert parse_content_description('Tray 12 x 40 gram') == (12, '40 gram')
 assert parse_content_description('36 rollen') == (36, 'rol')
 assert parse_content_description('Pak 10 stuks') == (10, '')
+assert parse_content_description('9 Flessen 50 CL') == (9, '50 CL')
