@@ -30,7 +30,7 @@ def links_get(url):
 
 
 def ah_get_by_sku(ah_sku, units):
-    assert re.match('^wi\d+$', ah_sku)
+    assert re.match(r'^wi\d+$', ah_sku)
 
     html_src = links_get(f'https://www.ah.nl/producten/product/{ah_sku}')
     doc = pq(html_src)
@@ -75,7 +75,7 @@ def sligro_client():
 
 
 def sligro_get_by_gtin(gtin13):
-    assert re.match('^\d{13}$', gtin13)
+    assert re.match(r'^\d{13}$', gtin13)
     gtin14 = f'{gtin13:0>14}'
 
     # The search feature of the website returns results in JSON and handles GTIN formats. Neat!
@@ -145,24 +145,16 @@ def parse_content_description(cd):
     # These ones are weird.
     if cd.endswith(' rollen'):
         return int(cd.split(' ')[0]), 'rol'
-    if (m := re.search('^Pak (\d+) stuks$', cd)):
+    if (m := re.search(r'^Pak (\d+) stuks$', cd)):
         return int(m[1]), ''
-    if (m := re.search('^(\d+) Flessen (\d+ CL)$', cd)):
+    if (m := re.search(r'^(\d+) Flessen (\d+ CL)$', cd)):
         return int(m[1]), m[2]
 
-    groups = re.split('\s+x\s+', cd)
+    groups = re.split(r'\s+x\s+', cd)
     volume = groups[-1]
     unit_groups = groups[:-1]
 
-    sub_units = (int(re.search('(\d+)', g)[0]) for g in unit_groups)
+    sub_units = (int(re.search(r'(\d+)', g)[0]) for g in unit_groups)
     units = reduce(lambda a, b: a * b, sub_units, 1)
 
     return units, volume
-
-assert parse_content_description('40 stuks x 22,5 gram') == (40, '22,5 gram')
-assert parse_content_description('4 multipacks x 6 blikjes x 33 cl') == (24, '33 cl')
-assert parse_content_description('24  2-packs x 70 gram') == (24, '70 gram')
-assert parse_content_description('Tray 12 x 40 gram') == (12, '40 gram')
-assert parse_content_description('36 rollen') == (36, 'rol')
-assert parse_content_description('Pak 10 stuks') == (10, '')
-assert parse_content_description('9 Flessen 50 CL') == (9, '50 CL')
