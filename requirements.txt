@@ -1,3 +1,4 @@
 pyquery
 pytest
 requests
+supermarktconnector

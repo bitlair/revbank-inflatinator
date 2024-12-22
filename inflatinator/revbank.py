@@ -67,8 +67,8 @@ class NoAutoUpdate(Exception):
 
 
 def find_product_details(product: Product):
-    if (ah_sku := product.metadata.get('ah', None)):
-        return scrapers.ah_get_by_sku(ah_sku, int(product.metadata['qty']))
+    if 'ah' in product.metadata:
+        return scrapers.ah_get_by_gtin(product.aliases[0])
     if 'sligro' in product.metadata:
         return scrapers.sligro_get_by_gtin(product.aliases[0])
     raise NoAutoUpdate()

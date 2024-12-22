@@ -1,3 +1,4 @@
+from dataclasses import dataclass
 from decimal import Decimal
 from functools import reduce
 from pyquery import PyQuery as pq
@@ -7,47 +8,47 @@ import os
 import requests
 import subprocess
 import logging
+from supermarktconnector.ah import AHConnector
+from typing import List
 
 
 vat = Decimal('1.09')
 
 
+@dataclass
 class Product:
-    def __init__(self, *, name, price, gtin, units, aliases=[]):
-        self.name = name
-        self.price = price
-        self.gtin = gtin
-        self.units = units
-        self.aliases = aliases
+    name: str
+    price: Decimal
+    gtin: str
+    units: int
+    aliases: List[str]
 
     def __str__(self):
         return self.name
 
 
-def links_get(url):
-    compl = subprocess.run(['links', '-source', url], capture_output=True)
-    return compl.stdout
+_ah = None
 
+def ah_get_by_gtin(gtin13):
+    assert re.match(r'^\d{13}$', gtin13)
 
-def ah_get_by_sku(ah_sku, units):
-    assert re.match(r'^wi\d+$', ah_sku)
+    global _ah
+    if not _ah:
+        _ah = AHConnector()
 
-    html_src = links_get(f'https://www.ah.nl/producten/product/{ah_sku}')
-    doc = pq(html_src)
+    ah_prod = _ah.get_product_by_barcode(gtin13)
 
-    ld_jsons = doc('script[type="application/ld+json"]')
-    for j in ld_jsons:
-        schema = json.loads(j.text)
-        if schema['@type'] == 'Product' and schema['sku'] == ah_sku:
-            break
-    else:
-        raise Exception(f'ah.nl returned no JSON metadata for SKU {ah_sku}')
+    units_description = ah_prod['salesUnitSize']
+    units = 1
+    if (m := re.search(r'^(\d+)', units_description)):
+        units = int(m[1])
 
     return Product(
-        name=schema['name'],
-        price=Decimal(schema['offers']['price']),
-        gtin=schema['gtin13'],
+        name=ah_prod['title'],
+        price=Decimal(ah_prod['priceBeforeBonus']),
+        gtin=gtin13,
         units=units,
+        aliases=[],
     )
 
 

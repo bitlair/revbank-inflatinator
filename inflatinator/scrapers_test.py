@@ -1,6 +1,16 @@
 from scrapers import *
 
 
+def test_scrape_ah():
+    # Ola Liuk
+    prod = ah_get_by_gtin('8711327538481')
+    assert type(prod) is Product
+    assert prod.name == 'Ola Liuk'
+    assert prod.gtin == '8711327538481'
+    assert prod.units == 8
+    assert prod.aliases == []
+
+
 def test_scrape_sligro():
     # Cola zero sugar
     prod = sligro_get_by_gtin('5000112659184')
