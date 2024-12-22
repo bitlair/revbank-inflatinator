@@ -40,7 +40,7 @@ def ah_get_by_gtin(gtin13):
 
     units_description = ah_prod['salesUnitSize']
     units = 1
-    if (m := re.search(r'^(\d+)', units_description)):
+    if (m := re.search(r'^\s*(\d+)', units_description)):
         units = int(m[1])
 
     return Product(
